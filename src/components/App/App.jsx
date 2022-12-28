@@ -11,6 +11,7 @@ export class App extends Component {
   state = {
     contacts: [],
     name: '',
+    filter: '',
   };
 
   componentDidMount() {
@@ -63,15 +64,36 @@ export class App extends Component {
     });
   };
 
+  handleStringChange = event => {
+    this.setState({
+      filter: event.currentTarget.value,
+    });
+  };
+
+  filteredContacts = data => {
+    return data.filter(contact =>
+      contact.name
+        .toLowerCase()
+        .trim()
+        .includes(this.state.filter.toLowerCase().trim())
+    );
+  };
+
   render() {
     return (
       <>
         <Section title="Phonebook">
           <Form addContact={this.addContact} />
         </Section>
+        <p>Find contacts by name</p>
+        <input
+          type="text"
+          onChange={this.handleStringChange}
+          value={this.state.filter}
+        />
         <Section title="Contacts">
           <Contacts
-            data={this.state.contacts}
+            data={this.filteredContacts(this.state.contacts)}
             deleteContact={this.deleteContact}
           />
         </Section>
